@@ -13,10 +13,10 @@ repo="https://repo-default.voidlinux.org"
 
 system_app="base-system grub-x86_64-efi pam_rundir dbus dhcpcd void-repo-nonfree"
 
-user_app="intel-ucode git curl wget xorg-minimal dejavu-fonts-ttf xclip firefox \
+user_app="intel-ucode git curl wget xorg-minimal dejavu-fonts-ttf xclip \
     alsa-utils alsa-plugins-pulseaudio pavucontrol\
-    xdg-dbus-proxy xdg-desktop-portal xdg-user-dirs xdg-user-dirs-gtk xdg-utils \
-    libavcodec keepassxc bspwm sxhkd rofi neovim kitty feh xsetroot"
+    xdg-dbus-proxy xdg-desktop-portal xdg-user-dirs  xdg-utils \
+    libavcodec bspwm sxhkd rofi neovim kitty feh xsetroot"
 
 rm_services=("agetty-tty3" "agetty-tty4" "agetty-tty5" "agetty-tty6")
 en_services=("dbus" "dhcpcd" "udevd")
@@ -137,6 +137,8 @@ chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 #Allow users in the wheel group to use sudo
 sed -i "s/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL) ALL/" /mnt/etc/sudoers
+sed -i "s/# Cmnd_Alias      REBOOT/Cmnd_Alias      REBOOT/" /mnt/etc/sudoers
+echo -e "## user is allowed to execute halt and reboot\nsleepy ALL=NOPASSWD: REBOOT" >> /mnt/etc/sudoers
 
 #Add folder for XDG_RUNTIME_DIR
 #echo -e "mkdir /run/user/1000 \nchown sleepy:sleepy /run/user/1000 \nchmod 700 /run/user/1000" >> /mnt/etc/rc.local
