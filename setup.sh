@@ -29,8 +29,7 @@ select line in $(fdisk -l | grep -v mapper | grep -o '/.*GiB' | tr -d ' '); do
     break
 done
 
-#Check if the disk are physical ssd like bare metal or if are virtualdisk like qemu
-#if the are physical > install stuff
+#Check type of disk
 if [[ $DISK_SELECTED == *"nvme"* ]]; then
     select l in $(fdisk -l | grep -v mapper | grep -o '/.*GiB' | tr -d ' '); do
         echo "Selected disk: $l"
