@@ -14,7 +14,7 @@ repo="https://repo-default.voidlinux.org"
 system_app="base-system grub-x86_64-efi pam_rundir dbus dhcpcd void-repo-nonfree"
 
 user_app="intel-ucode git curl wget xorg-minimal dejavu-fonts-ttf xclip \
-    alsa-utils alsa-plugins-pulseaudio pavucontrol\
+    alsa-utils alsa-plugins-pulseaudio pavucontrol firefox keepassxc \
     xdg-dbus-proxy xdg-desktop-portal xdg-user-dirs  xdg-utils \
     libavcodec bspwm sxhkd rofi neovim kitty feh xsetroot"
 
