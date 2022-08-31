@@ -15,7 +15,7 @@ system_app="base-system grub-x86_64-efi pam_rundir dbus dhcpcd void-repo-nonfree
 
 user_app="intel-ucode git zip unzip p7zip curl wget xorg-minimal dejavu-fonts-ttf xclip \
     alsa-utils alsa-plugins-pulseaudio pavucontrol firefox keepassxc \
-    xdg-dbus-proxy xdg-desktop-portal xdg-user-dirs xdg-utils \
+    xdg-dbus-proxy  xdg-user-dirs xdg-utils \
     libavcodec bspwm sxhkd rofi neovim kitty feh xsetroot"
 
 rm_services=("agetty-tty3" "agetty-tty4" "agetty-tty5" "agetty-tty6")
@@ -35,14 +35,14 @@ if [[ $DISK_SELECTED == *"nvme"* ]]; then
         echo "Selected disk: $l"
         HOME_DISK_SELECTED=$(echo $l | sed 's/:.*$//')
         break
-    done
+    don
     EFI_PART=$(echo $DISK_SELECTED'p1')
     ROOT_PART=$(echo $DISK_SELECTED'p2')
     HOME_PART=$(echo $HOME_DISK_SELECTED'1')
-    system_app="$system_app libvirt qemu virt-manager"
+    #system_app="$system_app libvirt qemu virt-manager"
     user_app="$user_app nvidia"
-    en_services="$en_services libvirtd virtlockd virtlogd"
-    user_groups="$user_groups,kvm,libvirt"
+    #en_services="$en_services libvirtd virtlockd virtlogd"
+    #user_groups="$user_groups,kvm,libvirt"
 fi
 
 if [[ $DISK_SELECTED == *"vd"* ]]; then
@@ -136,17 +136,17 @@ chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
 
 #Allow users in the wheel group to use sudo
 sed -i "s/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL) ALL/" /mnt/etc/sudoers
-sed -i "s/# Cmnd_Alias    REBOOT/Cmnd_Alias      REBOOT/" /mnt/etc/sudoers
+#sed -i "s/# Cmnd_Alias    REBOOT/Cmnd_Alias      REBOOT/" /mnt/etc/sudoers
 
 #Add folder for XDG_RUNTIME_DIR
 #echo -e "mkdir /run/user/1000 \nchown sleepy:sleepy /run/user/1000 \nchmod 700 /run/user/1000" >> /mnt/etc/rc.local
 echo "session         optional        pam_rundir.so" >> /mnt/etc/pam.d/login
 
 #Config perm for libvirt/qemu
-sed -i "/^#unix_sock_group/s/.//" /mnt/etc/libvirt/libvirtd.conf 
-sed -i "/^#unix_sock_rw_perms/s/.//" /mnt/etc/libvirt/libvirtd.conf 
-sed -i "s/\#user = \"libvirt\"/user = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
-sed -i "s/\#group = \"libvirt\"/group = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
+#sed -i "/^#unix_sock_group/s/.//" /mnt/etc/libvirt/libvirtd.conf 
+#sed -i "/^#unix_sock_rw_perms/s/.//" /mnt/etc/libvirt/libvirtd.conf 
+#sed -i "s/\#user = \"libvirt\"/user = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
+#sed -i "s/\#group = \"libvirt\"/group = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
 
 #Install user app
 chroot /mnt xbps-install -Suy xbps $user_app
