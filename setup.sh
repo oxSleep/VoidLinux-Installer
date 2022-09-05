@@ -16,7 +16,7 @@ system_app="base-system grub-x86_64-efi pam_rundir dbus dhcpcd void-repo-nonfree
 user_app="intel-ucode git zip unzip p7zip curl wget xorg-minimal dejavu-fonts-ttf xclip \
     alsa-utils alsa-plugins-pulseaudio pavucontrol firefox keepassxc \
     xdg-dbus-proxy  xdg-user-dirs xdg-utils \
-    libavcodec bspwm sxhkd rofi neovim kitty feh xsetroot"
+    libavcodec i3-gaps i3status-rust rofi neovim kitty feh xsetroot"
 
 rm_services=("agetty-tty3" "agetty-tty4" "agetty-tty5" "agetty-tty6")
 en_services=("dbus" "dhcpcd" "udevd")
@@ -39,10 +39,10 @@ if [[ $DISK_SELECTED == *"nvme"* ]]; then
     EFI_PART=$(echo $DISK_SELECTED'p1')
     ROOT_PART=$(echo $DISK_SELECTED'p2')
     HOME_PART=$(echo $HOME_DISK_SELECTED'1')
-    #system_app="$system_app libvirt qemu virt-manager"
+    system_app="$system_app libvirt qemu virt-manager"
     user_app="$user_app nvidia"
-    #en_services="$en_services libvirtd virtlockd virtlogd"
-    #user_groups="$user_groups,kvm,libvirt"
+    en_services="$en_services libvirtd virtlockd virtlogd"
+    user_groups="$user_groups,kvm,libvirt"
 fi
 
 if [[ $DISK_SELECTED == *"vd"* ]]; then
@@ -143,10 +143,10 @@ sed -i "s/# %wheel ALL=(ALL:ALL) ALL/%wheel ALL=(ALL) ALL/" /mnt/etc/sudoers
 echo "session         optional        pam_rundir.so" >> /mnt/etc/pam.d/login
 
 #Config perm for libvirt/qemu
-#sed -i "/^#unix_sock_group/s/.//" /mnt/etc/libvirt/libvirtd.conf 
-#sed -i "/^#unix_sock_rw_perms/s/.//" /mnt/etc/libvirt/libvirtd.conf 
-#sed -i "s/\#user = \"libvirt\"/user = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
-#sed -i "s/\#group = \"libvirt\"/group = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
+sed -i "/^#unix_sock_group/s/.//" /mnt/etc/libvirt/libvirtd.conf 
+sed -i "/^#unix_sock_rw_perms/s/.//" /mnt/etc/libvirt/libvirtd.conf 
+sed -i "s/\#user = \"libvirt\"/user = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
+sed -i "s/\#group = \"libvirt\"/group = \"sleepy\"/" /mnt/etc/libvirt/qemu.conf
 
 #Install user app
 chroot /mnt xbps-install -Suy xbps $user_app
